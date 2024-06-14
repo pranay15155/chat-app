@@ -14,25 +14,25 @@ export const SocketContextProvider = ({ children }) => {
   const { authUser } = useAuthContext();
 
   useEffect(() => {
-    if (authUser) {
-      const socket = io("https://chat-app-1-un6k.onrender.com", {
-        query: {
-          userId: authUser._id,
-        },
-      });
+   if (authUser) {
+     const socket = io("http://localhost:5001", {
+       query: {
+         userId: authUser._id,
+       },
+     });
 
-      setSocket(socket);
-      socket.on("getOnlineUsers", (users) => {
-        setOnlineUsers(users);
-      });
+     setSocket(socket);
+     socket.on("getOnlineUsers", (users) => {
+       setOnlineUsers(users);
+     });
 
-      return () => socket.close();
-    } else {
-      if (socket) {
-        socket.close();
-        setSocket(null);
-      }
-    }
+     return () => socket.close();
+   } else {
+     if (socket) {
+       socket.close();
+       setSocket(null);
+     }
+   }
   }, [authUser]);
   return (
     <SocketContext.Provider value={{ socket, onlineUsers }}>
